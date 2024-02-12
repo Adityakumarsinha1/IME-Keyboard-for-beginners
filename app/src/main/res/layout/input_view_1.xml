@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints,UselessParent">
+
+    <!-- syntax for HorizontalScrollView -->
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:foregroundGravity="center_vertical">
+
+        <!-- child view -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/key_pos_e_0"
+                android:text="0"
+
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_1"
+                android:text="1"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_2"
+                android:text="2"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_3"
+                android:text="3"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_4"
+                android:text="4"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_5"
+                android:text="5"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_6"
+                android:text="6"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_7"
+                android:text="7"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_8"
+                android:text="8"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_e_9"
+                android:text="9"
+                style="@style/SoftKey" />
+
+<!--            scroll to see emojis-->
+
+            <TextView
+                android:id="@+id/key_pos_0_0"
+                android:text="demo"
+                style="@style/SoftKey" />
+
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/key_pos_A1_0"
+                android:text="Q"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_1"
+                android:text="W"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_2"
+                android:text="E"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_3"
+                android:text="R"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_4"
+                android:text="T"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_5"
+                android:text="Y"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_6"
+                android:text="U"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_7"
+                android:text="I"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_8"
+                android:text="O"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A1_9"
+                android:text="P"
+                style="@style/SoftKey" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/key_pos_A2_0"
+                android:text="A"
+                style="@style/SoftKey"
+                android:layout_width="60dp"
+                />
+
+            <TextView
+                android:id="@+id/key_pos_A2_1"
+                android:text="S"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_2"
+                android:text="D"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_3"
+                android:text="F"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_4"
+                android:text="G"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_5"
+                android:text="H"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_6"
+                android:text="J"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_7"
+                android:text="K"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A2_8"
+                android:text="L"
+                style="@style/SoftKey"
+                android:layout_width="60dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/key_pos_A3_0"
+                style="@style/SoftKey"
+                android:drawableStart="@drawable/caps"
+                android:paddingHorizontal="20dp"
+                android:layout_width="60dp"
+                />
+
+            <TextView
+                android:id="@+id/key_pos_A3_1"
+                android:text="S"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_2"
+                android:text="Z"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_3"
+                android:text="X"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_4"
+                android:text="C"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_5"
+                android:text="V"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_6"
+                android:text="B"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_7"
+                android:text="N"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_8"
+                android:text="M"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A3_9"
+                android:drawableStart="@drawable/backspace"
+                android:paddingHorizontal="20dp"
+                style="@style/SoftKey"
+                android:layout_width="60dp"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/key_pos_A4_0"
+                style="@style/SoftKey"
+                android:text=".?a"
+                android:layout_width="60dp"
+                />
+
+            <TextView
+                android:id="@+id/key_pos_A4_1"
+                android:text=","
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A4_2"
+                android:drawableStart="@drawable/language"
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A4_3"
+                android:drawableStart="@drawable/spacebar"
+                android:paddingHorizontal="60dp"
+                android:layout_height="80dp"
+                style="@style/SoftKey"
+                android:layout_width="170dp"/>
+
+            <TextView
+                android:id="@+id/key_pos_A4_4"
+                android:text="."
+                style="@style/SoftKey" />
+
+            <TextView
+                android:id="@+id/key_pos_A4_5"
+                android:drawableStart="@drawable/action"
+                android:paddingHorizontal="20dp"
+                style="@style/SoftKey"
+                android:layout_width="60dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
