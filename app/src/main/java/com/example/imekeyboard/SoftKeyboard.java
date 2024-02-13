@@ -21,6 +21,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
+
 import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +68,9 @@ public class SoftKeyboard extends InputMethodService
 
     private String mWordSeparators;
 
+    HorizontalScrollView hsv;
 
-
-//
-    private KeyboardView kv;
-    private Keyboard keyboard;
-    private boolean caps = false;
+    String[] arr = {"Aditya" , "avinash" , "Aman"};
     /**
      * Main initialization of the input method component.  Be sure to call
      * to super class.
@@ -134,6 +134,8 @@ public class SoftKeyboard extends InputMethodService
 
         mSymbolsKeyboard = new LatinKeyboard(displayContext, R.xml.symbol);
         mSymbolsShiftedKeyboard = new LatinKeyboard(displayContext, R.xml.symbol_shift);
+
+//        hsv =
     }
 
     /**
@@ -145,7 +147,7 @@ public class SoftKeyboard extends InputMethodService
     @Override
     public View onCreateInputView() {
 
-//        setCandidatesViewShown(true);
+        setCandidatesViewShown(true);
 
 //        kv = (KeyboardView) getLayoutInflater().inflate(R.layout.input_view, null);
 //        keyboard = new Keyboard(this, R.xml.qwerty);
@@ -177,7 +179,10 @@ public class SoftKeyboard extends InputMethodService
 //        mCandidateView.setService(this);
 //        return mCandidateView;
 //        return getLayoutInflater().inflate(R.xml.candidate_view_0, null);
-        return null;
+
+        hsv = new HorizontalScrollView(this);
+        hsv.addView(getLayoutInflater().inflate(R.layout.candidate_view, null));
+        return hsv;
     }
 
     /**

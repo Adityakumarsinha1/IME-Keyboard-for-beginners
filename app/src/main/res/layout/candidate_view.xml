@@ -6,8 +6,12 @@
     android:layout_gravity="top"
     android:id="@+id/candidate_view"
     >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
     <TextView
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text=" Text !"
         android:maxLines="1"
@@ -18,7 +22,7 @@
         android:id="@+id/CVT1"
         android:paddingTop="10dp"/>
     <TextView
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text=" Text !"
         android:maxLines="1"
@@ -29,7 +33,7 @@
         android:id="@+id/CVT2"
         android:paddingTop="10dp"/>
     <TextView
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text=" Text !"
         android:maxLines="1"
@@ -39,5 +43,7 @@
         android:textAlignment="center"
         android:id="@+id/CVT3"
         android:paddingTop="10dp"/>
+
+    </LinearLayout>
 
 </HorizontalScrollView>
