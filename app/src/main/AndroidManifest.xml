@@ -14,7 +14,7 @@
         tools:targetApi="31">
 
         <service
-            android:name=".SampleInputMethodEditors"
+            android:name=".SoftKeyboard"
             android:exported="true"
             android:label="IME_By_Aditya"
             android:permission="android.permission.BIND_INPUT_METHOD">
