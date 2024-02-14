@@ -15,4 +15,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.example.imekeyboard.CustomView
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:backgroundTint="@color/grey"
+
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

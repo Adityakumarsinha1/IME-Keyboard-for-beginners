@@ -1,5 +1,6 @@
 package com.example.imekeyboard;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.inputmethodservice.InputMethodService;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,8 +25,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.imekeyboard.adapter.MyRvAdapter;
+import com.example.imekeyboard.databinding.RvStickersBinding;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -68,9 +79,17 @@ public class SoftKeyboard extends InputMethodService
 
     private String mWordSeparators;
 
-    HorizontalScrollView hsv;
+    LinearLayout lv;
 
-    String[] arr = {"Aditya" , "avinash" , "Aman"};
+    CustomLinarLayout cll;
+
+    RecyclerView rv;
+
+    LinearLayoutManager linearLayoutManager;
+    MyRvAdapter myRvAdapter;
+    ArrayList<String> links;
+
+
     /**
      * Main initialization of the input method component.  Be sure to call
      * to super class.
@@ -80,6 +99,7 @@ public class SoftKeyboard extends InputMethodService
         super.onCreate();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         mWordSeparators = getResources().getString(R.string.word_separators);
+
     }
 
     /**
@@ -135,7 +155,6 @@ public class SoftKeyboard extends InputMethodService
         mSymbolsKeyboard = new LatinKeyboard(displayContext, R.xml.symbol);
         mSymbolsShiftedKeyboard = new LatinKeyboard(displayContext, R.xml.symbol_shift);
 
-//        hsv =
     }
 
     /**
@@ -173,16 +192,12 @@ public class SoftKeyboard extends InputMethodService
      * Called by the framework when your view for showing candidates needs to
      * be generated, like {@link #onCreateInputView}.
      */
+    @SuppressLint("ResourceType")
     @Override
     public View onCreateCandidatesView() {
-//        mCandidateView = new CandidateView(getDisplayContext());
-//        mCandidateView.setService(this);
-//        return mCandidateView;
-//        return getLayoutInflater().inflate(R.xml.candidate_view_0, null);
-
-        hsv = new HorizontalScrollView(this);
-        hsv.addView(getLayoutInflater().inflate(R.layout.candidate_view, null));
-        return hsv;
+        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
+        return inflatedView;
     }
 
     /**
@@ -297,7 +312,7 @@ public class SoftKeyboard extends InputMethodService
         // a particular editor, to avoid popping the underlying application
         // up and down if the user is entering text into the bottom of
         // its window.
-        setCandidatesViewShown(false);
+//        setCandidatesViewShown(false);
 
         mCurKeyboard = mQwertyKeyboard;
         if (mInputView != null) {
