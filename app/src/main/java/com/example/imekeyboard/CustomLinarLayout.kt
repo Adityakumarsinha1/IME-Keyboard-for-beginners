@@ -11,9 +11,9 @@ import com.example.imekeyboard.adapter.MyRvAdapter
 class CustomLinarLayout(context: Context , attributeSet: AttributeSet): LinearLayout(context) {
 
 
-    private lateinit var rv : RecyclerView
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var myRvAdapter: MyRvAdapter
+    private  var rv : RecyclerView
+    private  var linearLayoutManager: LinearLayoutManager
+    private  var myRvAdapter: MyRvAdapter
     private  val links: ArrayList<String>  = ArrayList()
 
     init {

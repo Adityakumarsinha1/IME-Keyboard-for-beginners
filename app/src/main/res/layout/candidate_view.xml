@@ -3,51 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/candidate_view"
     android:layout_width="410dp"
-    android:layout_height="100dp"
+    android:layout_height="70dp"
     android:layout_gravity="top"
     android:background="@color/black"
     android:orientation="horizontal">
 
-    <com.example.imekeyboard.CustomLinarLayout
-        android:id="@+id/customview_1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/holo_red_dark"
-        tools:ignore="MissingConstraints" />
+<!--    <com.example.imekeyboard.CustomLinarLayout-->
+<!--        android:id="@+id/customview_1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:background="@android:color/holo_red_dark"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:text=" Text !"-->
-    <!--        android:textColor="@color/white"-->
-    <!--        android:layout_gravity="left"-->
-    <!--        android:maxLines="1"-->
-    <!--        android:textSize="20sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:id="@+id/CVT1"/>-->
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:text=" Text !"-->
-    <!--        android:textColor="@color/white"-->
-    <!--        android:maxLines="1"-->
-    <!--        android:textSize="20sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:id="@+id/CVT2"/>-->
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:text=" Text !"-->
-    <!--        android:textColor="@color/white"-->
-    <!--        android:layout_gravity="right"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:maxLines="1"-->
-    <!--        android:textSize="20sp"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:id="@+id/CVT3"/>-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/move_keyboard"
+        android:src="@drawable/orientation"
+        />
+
 
 
 </LinearLayout>
