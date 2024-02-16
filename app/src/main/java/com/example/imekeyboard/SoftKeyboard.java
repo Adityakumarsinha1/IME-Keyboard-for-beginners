@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.CompletionInfo;
@@ -34,6 +35,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.helper.widget.MotionEffect;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -98,6 +101,7 @@ public class SoftKeyboard extends InputMethodService
 
     Float pressed_x = null , pressed_y = null;
     private KeyboardView keyboardView;
+
     private KeyboardDragDelegate keyboardDragDelegate;
 
 
@@ -114,10 +118,10 @@ public class SoftKeyboard extends InputMethodService
 
         keyboardDragDelegate = new KeyboardDragDelegate(this, getWindow().getWindow());
 
-        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
-
-        iv = inflatedView.findViewById(R.id.move_keyboard);
+//        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
+//
+//        iv = inflatedView.findViewById(R.id.move_keyboard);
 
 
     }
@@ -185,22 +189,31 @@ public class SoftKeyboard extends InputMethodService
      * is displayed, and every time it needs to be re-created such as due to
      * a configuration change.
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateInputView() {
-        iv.setOnTouchListener(new View.OnTouchListener() {
+
+        final LinearLayout keyboardParent = (LinearLayout) getLayoutInflater().inflate(
+                R.layout.input_view, null);
+
+        Button handle = keyboardParent.findViewById(R.id.handle);
+        handle.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return keyboardDragDelegate.onTouch(view, motionEvent);
             }
         });
 
+        mInputView = (LatinKeyboardView) keyboardParent.findViewById(R.id.keyboard);
+
+
 //sjka
-        setCandidatesViewShown(true);
-         mInputView = (LatinKeyboardView) getLayoutInflater().inflate(
-                R.layout.input_view, null);
+//        setCandidatesViewShown(true);
         mInputView.setOnKeyboardActionListener(this);
+        mInputView.setPreviewEnabled(false);
         setLatinKeyboard(mQwertyKeyboard);
-        return mInputView;
+
+        return keyboardParent;
     }
 
     private void setLatinKeyboard(LatinKeyboard nextKeyboard) {
@@ -217,12 +230,13 @@ public class SoftKeyboard extends InputMethodService
     @SuppressLint("ResourceType")
     @Override
     public View onCreateCandidatesView() {
-        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
-
+//        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
+//
 //        inflatedView.findViewById(R.id.customview_1)
 
-        return inflatedView;
+//        return inflatedView;
+        return null;
     }
 
     @Override
@@ -230,11 +244,12 @@ public class SoftKeyboard extends InputMethodService
         WindowManager.LayoutParams params = getWindow().getWindow().getAttributes();
         params.y = 0;
         params.x = 0;
-        params.width = 1100;
+        params.width = 900;
 
         getWindow().getWindow().setAttributes(params);
     }
 
+    @SuppressLint("SuspiciousIndentation")
     @Override
     public void onComputeInsets(Insets outInsets) {
         if (mInputView != null)
@@ -264,11 +279,6 @@ public class SoftKeyboard extends InputMethodService
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
-
-//        iv.setOnTouchListener(mOnTouchListenerTv2);
-
-
-
         // Reset our state.  We want to do this even if restarting, because
         // the underlying state of the text editor could have changed in any way.
         mComposing.setLength(0);
@@ -678,7 +688,8 @@ public class SoftKeyboard extends InputMethodService
             handleClose();
             return;
         } else if (primaryCode == LatinKeyboardView.KEYCODE_LANGUAGE_SWITCH) {
-            handleLanguageSwitch();
+            handleLanguageSwitch();;
+
             return;
         } else if (primaryCode == LatinKeyboardView.KEYCODE_OPTIONS) {
             // Show a menu or somethin'
@@ -883,40 +894,42 @@ public class SoftKeyboard extends InputMethodService
       */
 
 
-//    private View.OnTouchListener mOnTouchListenerTv2 = new View.OnTouchListener() {
-//
-//        @Override
-//        public boolean onTouch(View v, MotionEvent event) {
-//            LinearLayout.LayoutParams relativeLayoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
-//            switch (event.getActionMasked()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    Log.d("Showing", "@@@ TV2 ACTION_UP");
-//                    // where the finger is during the drag
-//                    pressed_x = event.getRawX();
-//                    pressed_y = event.getRawY();
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    Log.d("Showing", "tv2 ACTION_MOVE");
-//                    // Calculate change in x and y
-//                    int x = (int) event.getRawX();
-//                    int y = (int) event.getRawY();
-//                    // Update the margins
-//                    int dx = (int) (x - pressed_x);
-//                    int dy = (int) (y - pressed_y);
-//                    // Update the margins
-//                    relativeLayoutParams.leftMargin += dx;
-//                    relativeLayoutParams.topMargin += dy;
-//                    iv.setLayoutParams(relativeLayoutParams);
-//                    // Save where the user's finger was for the next ACTION_MOVE
-//                    pressed_y = (float)y;
-//                    pressed_x = (float)x;
-//                    break;
-//                case MotionEvent.ACTION_UP:
-//                    Log.d("Showing", "TV2 ACTION_UP");
-//                    break;
-//            }
-//            return true;
-//        }
-//    };
 
+
+
+    private View.OnTouchListener handleTouch = new View.OnTouchListener() {
+        public boolean onTouch(View v, MotionEvent event) {
+            Log.d("@@@", "onTouch called");
+            LinearLayout.LayoutParams relativeLayoutParams = (LinearLayout.LayoutParams) mCandidateView.getLayoutParams();
+            Log.d("@@@", "onTouch called");
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.d("Showing", "@@@ TV2 ACTION_UP");
+                    // where the finger is during the drag
+                    pressed_x = event.getRawX();
+                    pressed_y = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Log.d("Showing", "tv2 ACTION_MOVE");
+                    // Calculate change in x and y
+                    int x = (int) event.getRawX();
+                    int y = (int) event.getRawY();
+                    // Update the margins
+                    float dx = x -  pressed_x;
+                    float dy = y - pressed_y;
+                    // Update the margins
+                    relativeLayoutParams.leftMargin += dx;
+                    relativeLayoutParams.topMargin += dy;
+                    mCandidateView.setLayoutParams(relativeLayoutParams);
+                    // Save where the user's finger was for the next ACTION_MOVE
+                    pressed_y = (float) y;
+                    pressed_x = (float)x;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.d("Showing", "TV2 ACTION_UP");
+                    break;
+            }
+            return true;
+        }
+    };
 }
