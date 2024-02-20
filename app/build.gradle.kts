@@ -50,4 +50,6 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("androidx.autofill:autofill:1.1.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    implementation ("com.airbnb.android:lottie:3.5.0")
 }

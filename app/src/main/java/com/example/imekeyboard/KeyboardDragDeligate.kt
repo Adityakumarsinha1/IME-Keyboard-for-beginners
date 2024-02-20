@@ -1,5 +1,6 @@
 package com.example.imekeyboard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.DisplayMetrics
 import android.util.Log
@@ -7,13 +8,23 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import kotlin.properties.Delegates
 
 class KeyboardDragDelegate(private val context: Context, private val window: Window) {
-    private var initialY: Int = 0
-    private var initialX: Int = 0
-    private var initialTouchX: Float = 0F
-    private var initialTouchY: Float = 0F
-    private var initCenterY = 0
+
+    companion object{
+        var initialY: Int?= null
+        var initialX: Int?=null
+        var initialTouchX: Float?=null
+        var initialTouchY: Float?=null
+        var initCenterY = 0
+
+        var newCenterX :Int?= null
+        var newCenterY :Int? = null
+    }
+
+    val params =  window.attributes
+
 
     private val centerYBound by lazy {
 //        val screenHeight = context.displayMetrics.heightPixels
@@ -25,7 +36,7 @@ class KeyboardDragDelegate(private val context: Context, private val window: Win
     }
 
     private val centerXBound by lazy {
-        val halfScreenWidth = context.displayMetrics.widthPixels / 2
+        val halfScreenWidth = context.displayMetrics.widthPixels /2
         return@lazy IntRange(-halfScreenWidth, halfScreenWidth)
     }
 
@@ -41,22 +52,31 @@ class KeyboardDragDelegate(private val context: Context, private val window: Win
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
-                val touchXMovement = event.rawX - initialTouchX
-                val touchYMovement = initialTouchY - event.rawY
+                val touchXMovement = event.rawX - initialTouchX!!
+                val touchYMovement = initialTouchY?.minus(
+                    event.rawY
+                )
 
-                val newCenterX: Int = initialX + touchXMovement.toInt()
+                newCenterX = initialX?.plus(touchXMovement.toInt())
 
-                val newCenterY: Int = initCenterY + touchYMovement.toInt()
+                if (touchYMovement != null) {
+                    newCenterY = initCenterY + touchYMovement.toInt()
+                }
 
-                if (isWithinXBound(newCenterX) && isWithinYBound(newCenterY)) {
-                    val params = window.attributes
-                    params.x = newCenterX
-                    params.y = newCenterY - (window.attributes.height / 2)
+                if (isWithinXBound(newCenterX!!) && isWithinYBound(newCenterY!!)) {
+//                    val params = window.attributes
+                    params.x = newCenterX as Int
+                    params.y = newCenterY as Int
                     updateViewLayout(params)
                     Log.d("MotionEvent", "A ACTION_MOVE")
+
+                    initialX = event.rawX.toInt()
+                    initialY = event.rawY.toInt()
                     return true
                 }
-                Log.d("MotionEvent", "B ACTION_MOVE ${isWithinXBound(newCenterX)} ${isWithinYBound(newCenterY)}")
+                Log.d("MotionEvent", "B ACTION_MOVE ${isWithinXBound(newCenterX!!)} ${isWithinYBound(
+                    newCenterY!!
+                )}")
                 return false
             }
         }
@@ -75,6 +95,7 @@ class KeyboardDragDelegate(private val context: Context, private val window: Win
         return newY in centerYBound
     }
 
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
     private fun getNavBarHeight(): Int {
         val resources = context.resources
         val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
@@ -83,12 +104,13 @@ class KeyboardDragDelegate(private val context: Context, private val window: Win
         } else 0
     }
 
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
     private fun getStatusBarHeight(): Int {
         var result = 0
         val resources = context.resources
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
+            result = resources.getDimensionPixelSize(resourceId)/2
         }
         return result
     }

@@ -29,7 +29,6 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +45,9 @@ import com.example.imekeyboard.databinding.RvStickersBinding;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import kotlin.jvm.internal.FloatSpreadBuilder;
+
 /**
  * Example of writing an input method for a soft keyboard.  This code is
  * focused on simplicity over completeness, so it should in no way be considered
@@ -87,22 +89,32 @@ public class SoftKeyboard extends InputMethodService
 
     private String mWordSeparators;
 
-    LinearLayout lv;
-
-    CustomLinarLayout cll;
-
-    RecyclerView rv;
-
-    LinearLayoutManager linearLayoutManager;
-    MyRvAdapter myRvAdapter;
-    ArrayList<String> links;
-
-    ImageView iv ;
-
-    Float pressed_x = null , pressed_y = null;
     private KeyboardView keyboardView;
 
-    private KeyboardDragDelegate keyboardDragDelegate;
+    Float pressed_x = 0.0f;
+    Float pressed_y = 0.0f;
+
+//    public Flo flo;
+
+//    private KeyboardDragDelegate keyboardDragDelegate;
+
+
+
+//    Button btn;
+
+    private int initialY = 0;
+    private int initialX = 0;
+    private float initialTouchX = 0F;
+    private float initialTouchY = 0F;
+    private int initCenterY = 0;
+
+
+//    private Flo flo;
+
+
+
+
+
 
 
 
@@ -115,15 +127,14 @@ public class SoftKeyboard extends InputMethodService
         super.onCreate();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         mWordSeparators = getResources().getString(R.string.word_separators);
-
-        keyboardDragDelegate = new KeyboardDragDelegate(this, getWindow().getWindow());
-
-//        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
 //
-//        iv = inflatedView.findViewById(R.id.move_keyboard);
+//        keyboardDragDelegate = new KeyboardDragDelegate(this, getWindow().getWindow());
+
+        final LinearLayout keyboardParent = (LinearLayout) getLayoutInflater().inflate(
+                R.layout.input_view, null);
 
 
+        Log.d("oncreate" , "called");
     }
 
     /**
@@ -189,26 +200,27 @@ public class SoftKeyboard extends InputMethodService
      * is displayed, and every time it needs to be re-created such as due to
      * a configuration change.
      */
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "CutPasteId"})
     @Override
     public View onCreateInputView() {
 
         final LinearLayout keyboardParent = (LinearLayout) getLayoutInflater().inflate(
                 R.layout.input_view, null);
+//        btn = keyboardParent.findViewById(R.id.handle);
 
-        Button handle = keyboardParent.findViewById(R.id.handle);
-        handle.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return keyboardDragDelegate.onTouch(view, motionEvent);
-            }
-        });
+//        Button handle = keyboardParent.findViewById(R.id.handle);
+//        handle.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return keyboardDragDelegate.onTouch(view, motionEvent);
+//            }
+//        });
 
         mInputView = (LatinKeyboardView) keyboardParent.findViewById(R.id.keyboard);
 
 
 //sjka
-//        setCandidatesViewShown(true);
+        setCandidatesViewShown(true);
         mInputView.setOnKeyboardActionListener(this);
         mInputView.setPreviewEnabled(false);
         setLatinKeyboard(mQwertyKeyboard);
@@ -230,30 +242,19 @@ public class SoftKeyboard extends InputMethodService
     @SuppressLint("ResourceType")
     @Override
     public View onCreateCandidatesView() {
-//        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
-//
-//        inflatedView.findViewById(R.id.customview_1)
+        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View inflatedView = layoutInflater.inflate(R.layout.candidate_view, null);
 
-//        return inflatedView;
-        return null;
+        inflatedView.findViewById(R.id.candidate_view);
+
+        return inflatedView;
     }
 
-    @Override
-    public void onConfigureWindow(Window win, boolean isFullscreen, boolean isCandidatesOnly) {
-        WindowManager.LayoutParams params = getWindow().getWindow().getAttributes();
-        params.y = 0;
-        params.x = 0;
-        params.width = 900;
-
-        getWindow().getWindow().setAttributes(params);
-    }
-
-    @SuppressLint("SuspiciousIndentation")
     @Override
     public void onComputeInsets(Insets outInsets) {
         if (mInputView != null)
-        outInsets.contentTopInsets = mInputView.getHeight() + getNavBarHeight() + getWindow().getWindow().getAttributes().y;
+            outInsets.contentTopInsets = mInputView.getHeight() + getNavBarHeight() + getWindow().getWindow().getAttributes().y;
+        Log.d("@@@" , "Oninsets Called");
     }
 
     @Override
@@ -282,7 +283,7 @@ public class SoftKeyboard extends InputMethodService
         // Reset our state.  We want to do this even if restarting, because
         // the underlying state of the text editor could have changed in any way.
         mComposing.setLength(0);
-        updateCandidates();
+//        updateCandidates();
 
         if (!restarting) {
             // Clear shift states.
@@ -377,7 +378,7 @@ public class SoftKeyboard extends InputMethodService
         Log.d("@@@",mComposing.toString());
 
         mComposing.setLength(0);
-        updateCandidates();
+//        updateCandidates();
 
         // We only hide the candidates window when finishing input on
         // a particular editor, to avoid popping the underlying application
@@ -412,13 +413,7 @@ public class SoftKeyboard extends InputMethodService
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
         super.onStartInputView(attribute, restarting);
         // Apply the selected keyboard to the input view.
-        setLatinKeyboard(mCurKeyboard);
-        mInputView.closing();
-
-        final InputMethodSubtype subtype = mInputMethodManager.getCurrentInputMethodSubtype();
-//        Log.d("@@@", (String) attribute.inputType);
-
-        mInputView.setSubtypeOnSpaceKey(subtype);
+//       btn.setOnTouchListener(handleTouch);
     }
 
     @Override
@@ -441,7 +436,7 @@ public class SoftKeyboard extends InputMethodService
         if (mComposing.length() > 0 && (newSelStart != candidatesEnd
                 || newSelEnd != candidatesEnd)) {
             mComposing.setLength(0);
-            updateCandidates();
+//            updateCandidates();
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
                 ic.finishComposingText();
@@ -462,7 +457,7 @@ public class SoftKeyboard extends InputMethodService
         if (mCompletionOn) {
             mCompletions = completions;
             if (completions == null) {
-                setSuggestions(null, false, false);
+//                setSuggestions(null, false, false);
                 return;
             }
 
@@ -471,7 +466,7 @@ public class SoftKeyboard extends InputMethodService
                 CompletionInfo ci = completions[i];
                 if (ci != null) stringList.add(ci.getText().toString());
             }
-            setSuggestions(stringList, true, true);
+//            setSuggestions(stringList, true, true);
         }
     }
 
@@ -607,7 +602,7 @@ public class SoftKeyboard extends InputMethodService
             Log.d("@@@","comminting");
             Log.d("@@@",mComposing.toString());
             mComposing.setLength(0);
-            updateCandidates();
+//            updateCandidates();
         }
     }
 
@@ -724,40 +719,40 @@ public class SoftKeyboard extends InputMethodService
      * text.  This will need to be filled in by however you are determining
      * candidates.
      */
-    private void updateCandidates() {
-        if (!mCompletionOn) {
-            if (mComposing.length() > 0) {
-                ArrayList<String> list = new ArrayList<String>();
-                list.add(mComposing.toString());
-                setSuggestions(list, true, true);
-            } else {
-                setSuggestions(null, false, false);
-            }
-        }
-    }
-
-    public void setSuggestions(List<String> suggestions, boolean completions,
-                               boolean typedWordValid) {
-        if (suggestions != null && suggestions.size() > 0) {
-            setCandidatesViewShown(true);
-        } else if (isExtractViewShown()) {
-            setCandidatesViewShown(true);
-        }
-        if (mCandidateView != null) {
-            mCandidateView.setSuggestions(suggestions, completions, typedWordValid);
-        }
-    }
+//    private void updateCandidates() {
+//        if (!mCompletionOn) {
+//            if (mComposing.length() > 0) {
+//                ArrayList<String> list = new ArrayList<String>();
+//                list.add(mComposing.toString());
+//                setSuggestions(list, true, true);
+//            } else {
+//                setSuggestions(null, false, false);
+//            }
+//        }
+//    }
+//
+//    public void setSuggestions(List<String> suggestions, boolean completions,
+//                               boolean typedWordValid) {
+//        if (suggestions != null && suggestions.size() > 0) {
+//            setCandidatesViewShown(true);
+//        } else if (isExtractViewShown()) {
+//            setCandidatesViewShown(true);
+//        }
+//        if (mCandidateView != null) {
+//            mCandidateView.setSuggestions(suggestions, completions, typedWordValid);
+//        }
+//    }
 
     private void handleBackspace() {
         final int length = mComposing.length();
         if (length > 1) {
             mComposing.delete(length - 1, length);
             getCurrentInputConnection().setComposingText(mComposing, 1);
-            updateCandidates();
+//            updateCandidates();
         } else if (length > 0) {
             mComposing.setLength(0);
             getCurrentInputConnection().commitText("", 0);
-            updateCandidates();
+//            updateCandidates();
         } else {
             keyDownUp(KeyEvent.KEYCODE_DEL);
         }
@@ -795,7 +790,7 @@ public class SoftKeyboard extends InputMethodService
             mComposing.append((char) primaryCode);
             getCurrentInputConnection().setComposingText(mComposing, 1);
             updateShiftKeyState(getCurrentInputEditorInfo());
-            updateCandidates();
+//            updateCandidates();
         } else {
             getCurrentInputConnection().commitText(
                     String.valueOf((char) primaryCode), 1);
@@ -817,6 +812,7 @@ public class SoftKeyboard extends InputMethodService
         if (window == null) {
             return null;
         }
+        Log.d("getToken", window.getAttributes().token.toString());
         return window.getAttributes().token;
     }
 
@@ -892,44 +888,8 @@ public class SoftKeyboard extends InputMethodService
     /**
      * From here we will start the implementation of flotation in the keyboard
       */
-
-
-
-
-
-    private View.OnTouchListener handleTouch = new View.OnTouchListener() {
-        public boolean onTouch(View v, MotionEvent event) {
-            Log.d("@@@", "onTouch called");
-            LinearLayout.LayoutParams relativeLayoutParams = (LinearLayout.LayoutParams) mCandidateView.getLayoutParams();
-            Log.d("@@@", "onTouch called");
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN:
-                    Log.d("Showing", "@@@ TV2 ACTION_UP");
-                    // where the finger is during the drag
-                    pressed_x = event.getRawX();
-                    pressed_y = event.getRawY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    Log.d("Showing", "tv2 ACTION_MOVE");
-                    // Calculate change in x and y
-                    int x = (int) event.getRawX();
-                    int y = (int) event.getRawY();
-                    // Update the margins
-                    float dx = x -  pressed_x;
-                    float dy = y - pressed_y;
-                    // Update the margins
-                    relativeLayoutParams.leftMargin += dx;
-                    relativeLayoutParams.topMargin += dy;
-                    mCandidateView.setLayoutParams(relativeLayoutParams);
-                    // Save where the user's finger was for the next ACTION_MOVE
-                    pressed_y = (float) y;
-                    pressed_x = (float)x;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    Log.d("Showing", "TV2 ACTION_UP");
-                    break;
-            }
-            return true;
-        }
-    };
 }
+
+
+
+
