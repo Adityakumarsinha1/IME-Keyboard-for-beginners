@@ -17,11 +17,14 @@ import com.example.imekeyboard.databinding.RvStickersBinding
 
 
 class MyRvAdapter(
-    private val context: Context,
-    private val links: ArrayList<String>
+    private val listner : EmojiClicked
 ) : RecyclerView.Adapter<MyRvAdapter.MenuViewHolder>() {
 
+
+    var links= ArrayList<String>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
+        Log.d("Deepak", "onCreateViewHolder: ")
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = RvStickersBinding.inflate(layoutInflater, parent, false)
 
@@ -31,29 +34,30 @@ class MyRvAdapter(
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         holder.myTextView!!.text = links[position]
+
         holder.myTextView!!.setOnClickListener {
-
-            holder.myTextView!!.visibility =  View.INVISIBLE
-            holder.lotty!!.visibility = View.VISIBLE
-            holder.lotty!!.setProgress(0f)
-            holder.lotty!!.pauseAnimation()
-            holder.lotty!!.playAnimation()
-            Log.d("RV", links[position])
-
-        }
-        holder.lotty!!.setOnClickListener {
-            holder.myTextView!!.visibility = View.VISIBLE
-            holder.lotty!!.visibility = View.INVISIBLE
+            listner.onEmojiClicked(position)
         }
     }
 
     override fun getItemCount(): Int {
+        Log.d("aditya_1", "getItemCount: ")
         return links.size
+    }
+
+    fun updateEmojilist(list: ArrayList<String>){
+        this.links.clear()
+        this.links.addAll(list)
+        notifyDataSetChanged()
     }
 
     inner class MenuViewHolder(private val binding: RvStickersBinding) : RecyclerView.ViewHolder(binding.root) {
         var myTextView: TextView? = binding.cvemoji
-        var lotty : LottieAnimationView? = binding.lavThumbUp
+//        var lotty : LottieAnimationView? = binding.lavThumbUp
 
     }
+}
+
+interface EmojiClicked{
+    fun onEmojiClicked(int: Int)
 }

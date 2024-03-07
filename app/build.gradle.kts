@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -52,4 +53,11 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     implementation ("com.airbnb.android:lottie:3.5.0")
+
+    implementation ("com.google.firebase:firebase-core:21.1.1")
+    implementation ("com.google.firebase:firebase-database-ktx")
+    implementation (platform("com.google.firebase:firebase-bom:31.1.1"))
+
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 }

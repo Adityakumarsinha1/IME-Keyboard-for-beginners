@@ -3,15 +3,18 @@ package com.example.imekeyboard;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.InputType;
 import android.text.method.MetaKeyKeyListener;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -31,6 +34,7 @@ import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,12 +43,21 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.imekeyboard.adapter.MyRvAdapter;
-import com.example.imekeyboard.databinding.RvStickersBinding;
+import com.example.imekeyboard.util.LottieUtil;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import kotlin.jvm.internal.FloatSpreadBuilder;
 
@@ -91,26 +104,37 @@ public class SoftKeyboard extends InputMethodService
 
     private KeyboardView keyboardView;
 
-    Float pressed_x = 0.0f;
-    Float pressed_y = 0.0f;
 
-//    public Flo flo;
 
+//    private  RecyclerView rv;
+//    private LinearLayoutManager linearLayoutManager;
+//    private MyRvAdapter myRvAdapter;
+
+//    Float pressed_x = 0.0f;
+//    Float pressed_y = 0.0f;
+//
+//    private Button btn = null;
 //    private KeyboardDragDelegate keyboardDragDelegate;
+//
+//
+//    private int initialY = 0;
+//    private int initialX = 0;
+//    private float initialTouchX = 0F;
+//    private float initialTouchY = 0F;
+//    private int initCenterY = 0;
+
+    private  LinearLayout  keyboardParent ;
+
+    private FirebaseDatabase database;
+    private Handler handler;
+    LottieAnimationView lottie;
 
 
 
-//    Button btn;
-
-    private int initialY = 0;
-    private int initialX = 0;
-    private float initialTouchX = 0F;
-    private float initialTouchY = 0F;
-    private int initCenterY = 0;
 
 
-//    private Flo flo;
-
+//    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//    long pno;
 
 
 
@@ -122,6 +146,7 @@ public class SoftKeyboard extends InputMethodService
      * Main initialization of the input method component.  Be sure to call
      * to super class.
      */
+    @SuppressLint("SuspiciousIndentation")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -130,11 +155,35 @@ public class SoftKeyboard extends InputMethodService
 //
 //        keyboardDragDelegate = new KeyboardDragDelegate(this, getWindow().getWindow());
 
-        final LinearLayout keyboardParent = (LinearLayout) getLayoutInflater().inflate(
+        keyboardParent = (LinearLayout) getLayoutInflater().inflate(
                 R.layout.input_view, null);
 
 
-        Log.d("oncreate" , "called");
+//        if (sharedPreferences != null)
+//            pno = sharedPreferences.getLong("phone_no", 0);
+//
+//        database =
+//                FirebaseDatabase.getInstance("https://keyboard-demo-80aaf-default-rtdb.asia-southeast1.firebasedatabase.app/");
+//
+//        database.getReference().get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+//            @Override
+//            public void onSuccess(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Long timeStr = snapshot.child("time").getValue(String.class) != null ?Long.parseLong(snapshot.child("time").getValue(String.class)) : null;
+//                    String emoji = snapshot.child("emoji").getValue(String.class);
+//                    LottieLog a = new LottieLog(timeStr, emoji);
+////                    LottieUtil.INSTANCE.getAll();
+//                    LottieUtil.INSTANCE.set(9576828504L, new ArrayList<>(Collections.singletonList(a)));
+//                    Log.d("checking db",new ArrayList<>(Collections.singletonList(a)).toString());
+//                }
+//            }
+//        });
+
+
+
+//
+//        btn = keyboardParent.findViewById(R.id.handle);
+          Log.d("oncreate" , "called");
     }
 
     /**
@@ -203,23 +252,90 @@ public class SoftKeyboard extends InputMethodService
     @SuppressLint({"ClickableViewAccessibility", "CutPasteId"})
     @Override
     public View onCreateInputView() {
-
-        final LinearLayout keyboardParent = (LinearLayout) getLayoutInflater().inflate(
-                R.layout.input_view, null);
-//        btn = keyboardParent.findViewById(R.id.handle);
-
-//        Button handle = keyboardParent.findViewById(R.id.handle);
-//        handle.setOnTouchListener(new View.OnTouchListener() {
+//        btn.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                return keyboardDragDelegate.onTouch(view, motionEvent);
+//                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) keyboardParent.getLayoutParams();
+//
+//                switch (motionEvent.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        pressed_x = motionEvent.getRawX();
+//                        pressed_y = motionEvent.getRawY();
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//                        int x = (int) motionEvent.getX();
+//                        int y = (int) motionEvent.getRawY();
+//
+//                        float dx = x - pressed_x;
+//                        float dy = y - pressed_y;
+//                        layoutParams.leftMargin = (int) (layoutParams.leftMargin + dx);
+//                        layoutParams.topMargin = (int) (layoutParams.topMargin + dy);
+//
+//
+//                        keyboardParent.setLayoutParams(layoutParams);
+//
+//                        pressed_y = motionEvent.getRawY();
+//                        pressed_x = motionEvent.getRawX();
+//                        break;
+//                    default:
+//                        return false;
+//                }
+//                return false;
 //            }
 //        });
-
         mInputView = (LatinKeyboardView) keyboardParent.findViewById(R.id.keyboard);
 
 
-//sjka
+
+//        database = FirebaseDatabase.getInstance("https://keyboard-demo-80aaf-default-rtdb.asia-southeast1.firebasedatabase.app/");
+////        Listing to data
+//        DatabaseReference userRef = database.getReference("Ks").child("Test").child("");
+//        userRef.addValueEventListener(new ValueEventListener() {
+//            final LayoutInflater inflater = (LayoutInflater) getDisplayContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
+//            final View popupView = inflater.inflate(R.layout.popup_view, null);
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String sent = snapshot.getValue().toString();
+//                Log.d("Listner" , sent);
+//                try {
+//
+//                        lottie = popupView.findViewById(R.id.ad);
+//
+//                        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, false);
+//                        lottie.setVisibility(View.VISIBLE);
+//                        lottie.cancelAnimation();
+//                        lottie.playAnimation();
+//                        lottie.cancelAnimation();
+//
+//                        popupWindow.setElevation(0.0f);
+//
+//                        popupWindow.showAsDropDown(mInputView, 0, 0);
+//                        popupWindow.showAtLocation(mInputView, Gravity.TOP, 0, 0);
+//                        popupWindow.setOutsideTouchable(true);
+////
+//                        Runnable runnable = new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                popupWindow.dismiss();
+//                            }
+//                        };
+//
+//                        handler.postDelayed(runnable, 3000);
+//                }
+//                catch (Exception e){
+//                    e.printStackTrace();
+////                    Log.d("68465131684664512" , e);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+
+
         setCandidatesViewShown(true);
         mInputView.setOnKeyboardActionListener(this);
         mInputView.setPreviewEnabled(false);
@@ -396,6 +512,7 @@ public class SoftKeyboard extends InputMethodService
     public void onWindowHidden() {
         super.onWindowHidden();
         setCandidatesViewShown(false);
+        LottieUtil.INSTANCE.setWindowShown(false);
         Log.d("@@@","window hidden");
     }
 
@@ -403,6 +520,8 @@ public class SoftKeyboard extends InputMethodService
     public void onWindowShown() {
 
         super.onWindowShown();
+
+        LottieUtil.INSTANCE.setWindowShown(true);
         setCandidatesViewShown(true);
         Log.d("@@@","window shown");
     }
@@ -413,7 +532,39 @@ public class SoftKeyboard extends InputMethodService
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
         super.onStartInputView(attribute, restarting);
         // Apply the selected keyboard to the input view.
-//       btn.setOnTouchListener(handleTouch);
+//       btn.setOnTouchListener(onTouchListener);
+//        btn.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) keyboardParent.getLayoutParams();
+//
+//                switch (motionEvent.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        pressed_x = motionEvent.getRawX();
+//                        pressed_y = motionEvent.getRawY();
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//                        int x = (int) motionEvent.getX();
+//                        int y = (int) motionEvent.getRawY();
+//
+//                        float dx = x - pressed_x;
+//                        float dy = y - pressed_y;
+//                        layoutParams.leftMargin = (int) (layoutParams.leftMargin + dx);
+//                        layoutParams.topMargin = (int) (layoutParams.topMargin + dy);
+//
+//
+//                        keyboardParent.setLayoutParams(layoutParams);
+//
+//                        pressed_y = motionEvent.getRawY();
+//                        pressed_x = motionEvent.getRawX();
+//                        break;
+//                    default:
+//                        return false;
+//                }
+//                return true;
+//            }
+//        });
+
     }
 
     @Override
@@ -888,6 +1039,44 @@ public class SoftKeyboard extends InputMethodService
     /**
      * From here we will start the implementation of flotation in the keyboard
       */
+
+//    @SuppressLint("ClickableViewAccessibility")
+//    private final View.OnTouchListener onTouchListener = (v, event) -> {
+//
+//        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) keyboardParent.getLayoutParams();
+//
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                pressed_x = event.getRawX();
+//                pressed_y = event.getRawY();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                int x = (int) event.getX();
+//                int y = (int) event.getRawY();
+//
+//                float dx = x - pressed_x;
+//                float dy = y - pressed_y;
+//                layoutParams.leftMargin = (int) (layoutParams.leftMargin + dx);
+//                layoutParams.topMargin = (int) (layoutParams.topMargin + dy);
+//
+//
+//                keyboardParent.setLayoutParams(layoutParams);
+//
+//                pressed_y = event.getRawY();
+//                pressed_x = event.getRawX();
+//                break;
+//            default:
+//                return false;
+//        }
+//        return true;
+//    };
+
+
+
+
+
+
+
 }
 
 

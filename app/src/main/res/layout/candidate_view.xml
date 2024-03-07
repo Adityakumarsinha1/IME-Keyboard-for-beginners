@@ -5,15 +5,19 @@
     android:layout_width="410dp"
     android:layout_height="wrap_content"
     android:layout_gravity="top"
-    android:background="@color/white"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <com.example.imekeyboard.CustomLinarLayout
         android:id="@+id/customview_1"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints" />
 
-
+    <com.example.imekeyboard.Contcts
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:id="@+id/contact_view" />
 
 </LinearLayout>

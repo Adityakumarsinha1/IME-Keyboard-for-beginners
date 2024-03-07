@@ -14,9 +14,13 @@
 <!--        android:layout_width="100dp"-->
 <!--        android:text="Move"-->
 <!--        android:layout_height="50dp" />-->
+
+
 <com.example.imekeyboard.LatinKeyboardView
     android:id="@+id/keyboard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     />
+
+
 </LinearLayout>
