@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "9735437033",
+    "project_id": "keyboard-demo-80aaf",
+    "storage_bucket": "keyboard-demo-80aaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9735437033:android:38ae0356d49700ad89ce78",
+        "android_client_info": {
+          "package_name": "com.example.imekeyboard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8Tp3YXCtRLARQJ1OYO0-EntiHNi8muO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
